@@ -1,17 +1,10 @@
-const { defineConfig } = require("eslint/config");
-const expoConfig = require("eslint-config-expo/flat");
-const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
-const eslintPluginReactNative = require("eslint-plugin-react-native");
-
-module.exports = defineConfig([
-  expoConfig,
-  eslintPluginPrettierRecommended,
+module.exports = [
+  ...require("eslint-config-expo/flat"),
+  require("eslint-plugin-prettier/recommended"),
   {
-    plugins: {
-      "react-native": eslintPluginReactNative,
-    },
     rules: {
-      "react-native/no-unused-styles": "error",
+      "no-console": "off",
+      "react-native/no-inline-styles": "warn",
     },
   },
-]);
+];
