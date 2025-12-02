@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Button, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { createNewExpense } from "../services/create_expense";
 
@@ -9,16 +10,20 @@ import { Audio } from "expo-av";
 export default function NewExpense() {
   const [imageUri, setImageUri] = useState(null)
   const [audioUri, setAudioUri] = useState(null)
+  const [pdfUri, setPdfUri] = useState(null)
   const [recording, setRecording] = useState(null)
   const [status, setStatus] = useState("")
 
   const handleSubmit = async () => {
-    if (!(imageUri || audioUri)) return;
+    if (!(imageUri || audioUri || pdfUri)) return;
     try {
       await createNewExpense(imageUri, audioUri),
 
       setStatus("Expense submitted successfully!")
       setImageUri(null)
+      setAudioUri(null)
+      setPdfUri(null)
+      setTimeout(() => setStatus(""), 3000) // like flash message
     } catch {
       setStatus("Submit failed")
     }
@@ -74,6 +79,14 @@ export default function NewExpense() {
     setAudioUri(uri)
   }
 
+  const pickPdf = async () => {
+    const result = await DocumentPicker.getDocumentAsync({ type: "application/pdf", copyToCacheDirectory: true, })
+
+    if (result.assets && result.assets.length > 0) {
+      setPdfUri(result.assets[0].uri);
+    }
+  }
+
   return (
     <View style={styles.container}>
       {imageUri && (
@@ -82,6 +95,10 @@ export default function NewExpense() {
 
       {audioUri && (
         <Text style={styles.previewAudio}> Audio File: {audioUri.split('/').pop()} </Text>
+      )}
+
+      {pdfUri && (
+        <Text style={styles.previewPdf}>PDF File: {pdfUri.split("/").pop()}</Text>
       )}
 
       <View style={styles.imageContainer}>
@@ -101,14 +118,23 @@ export default function NewExpense() {
       <View style={styles.voiceContainer}>
         <Text style={styles.sectionTitle}>Voice Note</Text>
         <TouchableOpacity onPress={recording ? stopRecording : startRecording} style={styles.voiceButton} >
-          <Ionicons name={recording ? "stop-circle-outline" : "mic-outline"} size={32} color="black" />
+          <Ionicons name={recording ? "" : "mic-outline"} size={32} color="black" />
           <Text style={styles.buttonText}>
             {recording ? "Stop Recording" : "Record Voice"}
           </Text>
+          {recording && <View style={styles.recordingIndicator} />}
         </TouchableOpacity>
       </View>
 
-      <Button title="Submit" onPress={handleSubmit} disabled={!(imageUri || audioUri)} />
+      <View style={styles.pdfContainer}>
+        <Text style={styles.sectionTitle}>PDF</Text>
+        <TouchableOpacity onPress={pickPdf} style={styles.button}>
+          <Ionicons name="document-outline" size={32} color="black" />
+          <Text style={styles.buttonText}>Select PDF</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Button style={styles.submitButton} title="Submit" onPress={handleSubmit} disabled={!(imageUri || audioUri)} />
       {status && <Text>{status}</Text>}
     </View>
   )
@@ -118,8 +144,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    justifyContent: "space-around",
+    padding: 40,
+    backgroundColor: "#f9f9f9",
   },
   previewImage: {
     width: 200,
@@ -130,41 +157,69 @@ const styles = StyleSheet.create({
     width: 300,
     marginBottom: 20,
   },
+  previewPdf: {
+    width: 300,
+    marginBottom: 20,
+  },
   imageButtons: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 40,
+    gap: 60,
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   button: {
-    padding: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 5
   },
   buttonText: {
     textAlign: "center",
-    marginTop: 5,
+    marginTop: 10,
+    fontSize: 14,
+  },
+  recordingIndicator: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "red",
+    marginLeft: 10,
   },
   voiceContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 40,
     width: "100%",
   },
   imageContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
+    width: "100%",
+  },
+  pdfContainer: {
+    alignItems: "center",
+    marginBottom: 40,
     width: "100%",
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   voiceButton: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
   },
   voiceStatus: {
     marginTop: 10,
   },
+  submitButton: {
+
+  }
 });

@@ -112,7 +112,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   status: {
-    fontSize: 12,
-    fontStyle: "italic",
+    fontSize: 11,
   },
 })
