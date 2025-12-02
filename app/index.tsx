@@ -21,8 +21,8 @@ const mockExpenses = [
   {
     id: "3",
     title: "Travel Fare",
-    amount: 250.00,
-    status: "rejected",
+    amount: 250.30,
+    status: "approved",
     date: "2025-11-05",
   },
   {
@@ -32,9 +32,119 @@ const mockExpenses = [
     status: "pending",
     date: "2025-11-01",
   },
+  {
+    id: "5",
+    title: "Cloud Hosting (AWS)",
+    amount: 320.00,
+    status: "approved",
+    date: "2025-11-18",
+  },
+  {
+    id: "6",
+    title: "Developer Conference Ticket",
+    amount: 599.00,
+    status: "pending",
+    date: "2025-11-20",
+  },
+  {
+    id: "7",
+    title: "New MacBook Charger",
+    amount: 89.00,
+    status: "approved",
+    date: "2025-11-22",
+  },
+  {
+    id: "8",
+    title: "Figma Team Plan",
+    amount: 180.00,
+    status: "approved",
+    date: "2025-12-01",
+  },
+  {
+    id: "9",
+    title: "Grab Rides for Client Visit",
+    amount: 42.70,
+    status: "approved",
+    date: "2025-12-02",
+  },
+  {
+    id: "10",
+    title: "Monitor Stand",
+    amount: 129.90,
+    status: "pending",
+    date: "2025-11-28",
+  },
+  {
+    id: "11",
+    title: "Random Gaming Mouse",
+    amount: 259.00,
+    status: "rejected", // questionable
+    date: "2025-11-27",
+  },
+  {
+    id: "12",
+    title: "Team Building Event (Mini Golf)",
+    amount: 340.00,
+    status: "approved",
+    date: "2025-11-30",
+  },
+  {
+    id: "13",
+    title: "VPN Subscription",
+    amount: 79.99,
+    status: "approved",
+    date: "2025-11-12",
+  },
+  {
+    id: "14",
+    title: "UX Testing Gift Cards",
+    amount: 150.00,
+    status: "pending",
+    date: "2025-12-03",
+  },
+  {
+    id: "15",
+    title: "iPad Pro Stylus",
+    amount: 149.99,
+    status: "pending",
+    date: "2025-11-29",
+  },
+  {
+    id: "16",
+    title: "Premium Coffee Beans",
+    amount: 68.50,
+    status: "approved",
+    date: "2025-11-26",
+  },
+  {
+    id: "17",
+    title: "After-Work Drinks",
+    amount: 210.00,
+    status: "pending", // acceptable-ish
+    date: "2025-11-24",
+  },
+  {
+    id: "18",
+    title: "Noise Cancelling Headphones",
+    amount: 399.00,
+    status: "approved",
+    date: "2025-11-21",
+  },
+  {
+    id: "19",
+    title: "Random Lazada Gadget",
+    amount: 89.00,
+    status: "pending", // maybe questionable but not outright rejected
+    date: "2025-11-23",
+  },
+  {
+    id: "20",
+    title: "Taxi to Office (Late Night)",
+    amount: 34.20,
+    status: "approved",
+    date: "2025-12-01",
+  },
 ];
-
-
 
 export default function App() {
 
@@ -49,7 +159,9 @@ export default function App() {
   const renderItem = ({ item }) => (
   <View style={[styles.item, { backgroundColor: getBackgroundColor(item.status) }]}>
     <View style={styles.rowContainer}>
-      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.title}>
+        {item.title.length > 20 ? item.title.substring(0, 20) + "..." : item.title}
+      </Text>
       <Text style={styles.amount}>${item.amount.toFixed(2)}</Text>
       <Text style={styles.status}> {item.status.toUpperCase()} </Text>
     </View>
